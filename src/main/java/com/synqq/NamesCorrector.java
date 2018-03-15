@@ -18,8 +18,7 @@ import java.util.Set;
  */
 public class NamesCorrector {
 	/**
-	 * Make corrections to the text based on context and use Jaro-Winkler distance 
-	 * between names in the text in the context.
+	 * Make corrections to the text based on context.
 	 * @param text Sentences with names which should be corrected. Names should start with an 
 	 * Uppercase character.
 	 * @param context a list of names. Each name may be a single name or a first and last name 
@@ -27,7 +26,7 @@ public class NamesCorrector {
 	 * @return
 	 */
 	public static List<NameCorrection> correct(String text, String[] context) {
-		Context enhancedContext = new Context(context);
+		ContextAwareNameCorrector contextAwareCorrector = new ContextAwareNameCorrector(context);
 		List<List<String>> continuousNameList = NamesExtractor.extractContinuousNameList(text);
 		List<NameCorrection> result = new ArrayList<>();
 		
@@ -35,7 +34,8 @@ public class NamesCorrector {
 		for (List<String> nameGroup : continuousNameList) {
 			if (nameGroup.size() == 1) {
 				String name = nameGroup.get(0);
-				List<ContextPersonWithCorrection> contextPersonsByName = enhancedContext.findSimilarPersonByName(name);
+				List<ContextPersonWithCorrection> contextPersonsByName = 
+						contextAwareCorrector.findSimilarPersonByName(name);
 				textPersons.add(new TextPerson(name, contextPersonsByName));
 			} else {
 				int possiblePersonCount = nameGroup.size() / 2;
@@ -43,7 +43,8 @@ public class NamesCorrector {
 				while (currentPerson < possiblePersonCount) {
 					String firstName = nameGroup.get(currentPerson * 2);
 					String lastName = nameGroup.get(currentPerson * 2 + 1);
-					List<ContextPersonWithCorrection> contextPersonsByName = enhancedContext.findSimilarPersonByName(firstName, lastName);
+					List<ContextPersonWithCorrection> contextPersonsByName = 
+							contextAwareCorrector.findSimilarPersonByName(firstName, lastName);
 					textPersons.add(new TextPerson(firstName, lastName, contextPersonsByName));
 					currentPerson++;
 				}
@@ -68,7 +69,8 @@ public class NamesCorrector {
 		for (TextPerson textPerson : textPersons) {
 			List<ContextPersonWithCorrection> possibleContextPersons = textPerson.getPossibleContextPersons();
 			if (possibleContextPersons != null && possibleContextPersons.size() == 1) {
-				possibleContextPersons.forEach(personWithCorrection -> withoutAlternatives.add(personWithCorrection.getPerson()));
+				possibleContextPersons.forEach(personWithCorrection -> 
+					withoutAlternatives.add(personWithCorrection.getPerson()));
 			}
 		}
 		
@@ -89,7 +91,8 @@ public class NamesCorrector {
 						}
 					}
 					if (possibleContextPersons.size() == 1) {
-						possibleContextPersons.forEach(personWithCorrection -> withoutAlternatives.add(personWithCorrection.getPerson()));
+						possibleContextPersons.forEach(personWithCorrection -> 
+							withoutAlternatives.add(personWithCorrection.getPerson()));
 						hasNewAlternatives = true;
 					}
 				}
@@ -105,28 +108,6 @@ public class NamesCorrector {
 				possibleContextPersons.clear();
 				possibleContextPersons.add(firstPerson);
 			}
-		}
-	}
-
-	private static class TextPerson {
-		String firstName;
-		String lastName;
-		List<ContextPersonWithCorrection> possibleContextPersons;
-		
-		public TextPerson(String firstName, String lastName, List<ContextPersonWithCorrection> possibleContextPersons) {
-			this.firstName = firstName;
-			this.lastName = lastName;
-			this.possibleContextPersons = possibleContextPersons;
-		}
-		
-		public TextPerson(String firstName, List<ContextPersonWithCorrection> possibleContextPersons) {
-			this.firstName = firstName;
-			this.lastName = null;
-			this.possibleContextPersons = possibleContextPersons;
-		}
-
-		public List<ContextPersonWithCorrection> getPossibleContextPersons() {
-			return possibleContextPersons;
 		}
 	}
 }

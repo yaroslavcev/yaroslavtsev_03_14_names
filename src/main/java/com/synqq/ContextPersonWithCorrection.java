@@ -2,6 +2,11 @@ package com.synqq;
 
 import java.util.List;
 
+/**
+ * POJO for grouping of person and corresponding corrections that must be done for TextPerson
+ * @author Ilya Yaroslavtsev
+ *
+ */
 public class ContextPersonWithCorrection {
 	ContextPerson person;
 	List<NameCorrection> corrections;

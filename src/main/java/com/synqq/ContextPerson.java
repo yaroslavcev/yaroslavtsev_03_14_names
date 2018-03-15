@@ -1,5 +1,11 @@
 package com.synqq;
 
+/**
+ * POJO for a person from context.
+ * 
+ * @author Ilya Yaroslavtsev
+ *
+ */
 public class ContextPerson {
 	private String fullName;
 	private String[] nameParts;

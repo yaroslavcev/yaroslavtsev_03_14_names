@@ -24,14 +24,26 @@ public class NamesCorrectorTest {
 			"Fitcher"};
 	@Test
 	public void testCorrection() throws EncoderException {
-		List<NameCorrection> result = NamesCorrector.correct("Michael likes movies with Jon Way and Client East", CONTEXT);
-		List<NameCorrection> expectedResult = Arrays.asList(new NameCorrection("Jon", "John"), 
-				new NameCorrection("Way", "Wayne"),
-				new NameCorrection("Client", "Clint"),
-				new NameCorrection("East", "Eastwood"));
+//		List<NameCorrection> result = NamesCorrector.correct("tomorrow I have a meeting with Tim Hanks Tom Crus and Eastwud", CONTEXT);
+//		List<NameCorrection> expectedResult = Arrays.asList(new NameCorrection("Tim", "Tom"), 
+//				new NameCorrection("Crus", "Cruise"),
+//				new NameCorrection("Eastwud", "Eastwood"));
+//		assertEquals(expectedResult, result);
+//
+//		result = NamesCorrector.correct("Michael likes movies with Jon Way and Client East", CONTEXT);
+//		expectedResult = Arrays.asList(new NameCorrection("Jon", "John"), 
+//				new NameCorrection("Way", "Wayne"),
+//				new NameCorrection("Client", "Clint"),
+//				new NameCorrection("East", "Eastwood"));
+//		assertEquals(expectedResult, result);
+		
+		List<NameCorrection> result = NamesCorrector.correct("Jonn invited me Jon Ham and Jon Wane, over for a lunch", CONTEXT);
+		List<NameCorrection> expectedResult = Arrays.asList(new NameCorrection("Jonn", "John"), 
+				new NameCorrection("Ham", "Hamm"),
+				new NameCorrection("Jon", "John"),
+				new NameCorrection("Wane", "Wayne"));
 		assertEquals(expectedResult, result);
-//		JaroWinklerDistance jwd = new JaroWinklerDistance();
-//		Soundex soundex = new Soundex();
+
 //		System.out.println(jwd.apply("Jon", "John"));
 //		System.out.println(jwd.apply("Wane", "Wayne"));
 //		System.out.println(jwd.apply("Jon Wane", "John Wayne"));
@@ -47,9 +59,19 @@ public class NamesCorrectorTest {
 //			"Jon Hamm",
 //			"John Nolan",
 //			"William",
-//			"Fitcher");
+//			"Fitcher",
+//			"Sherlock Holmes",
+//			"John Watson");
+//		//Sherlock Jon Watson
 //		for (String name : list) {
-//			System.out.println(name + " " + jwd.apply("Michael", name) + " " + soundex.difference("Michael", name));
+//
+//			String left = "Jon Watson";
+//			System.out.println(name + " " + jwd.apply(left, name) + " " + soundex.difference(left, name));
+//			String[] splittedName = name.split(" ");
+//			if (splittedName.length > 1) {
+//				System.out.println(splittedName[0] + " " + jwd.apply(left, splittedName[0]) + " " + soundex.difference(left, splittedName[0]));
+//				System.out.println(splittedName[1] + " " + jwd.apply(left, splittedName[1]) + " " + soundex.difference(left, splittedName[1]));
+//			}
 //		}
 	}
 }
